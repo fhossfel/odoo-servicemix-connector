@@ -1,0 +1,10 @@
+#
+# Copyright (C) 2019 Thought Gang GmbH
+# 
+# This file is part of odoo-camel-connector.
+# 
+# odoo-camel-connector or any parts thereof cannot be copied, modified, distributed
+# and/or used without the express permission of the Thought Gang GmbH, Hamburg, DE.
+#
+
+class=de.thoughtgang.camel.odoo.OdooComponent

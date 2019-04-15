@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  This software is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as published
+  by the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This software is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public License
+  along with this software. If not, see <http://www.gnu.org/licenses />.
+
+  Copyright 2017 West IT Solutions
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>de.thoughtgang.servicemix</groupId>
+    <artifactId>odoo-servicemix-connector</artifactId>
+    <version>1.0</version>
+    <name>Odoo Servicemix Connector</name>
+
+    <organization>
+        <name>thought Gang GmbH</name>
+        <url>https://www.thoughtgang.de/</url>
+    </organization>
+  
+    <licenses>
+        <license>
+            <name>LGPL v3</name>
+            <url>https://www.gnu.org/licenses/lgpl-3.0.html</url>
+        </license>
+    </licenses>
+  
+    <scm>
+        <connection>scm:git:https://github.com/fhossfel/odoo-servicemix-connector</connection>
+        <developerConnection>scm:git:https://github.com/fhossfel/odoo-servicemix-connector</developerConnection>
+    </scm>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        
+
+        <felix.fileinstall.version>3.5.0</felix.fileinstall.version>
+        <aries.blueprint.version>1.4.4</aries.blueprint.version>
+        <asm.commons.version>5.0.4</asm.commons.version>
+        <osgi.log.version>1.3.0</osgi.log.version>
+        <osgi.http.version>1.2.1</osgi.http.version>
+        
+        
+        <odoo-java-api.version>3.0.1</odoo-java-api.version>
+        <servicemix.parent.version>7.0.1</servicemix.parent.version>
+        
+        <junit.jupiter.version>5.3.1</junit.jupiter.version>
+        <junit.platform.version>1.3.1</junit.platform.version>        
+        <mockito.version>2.26.0</mockito.version>
+        <xmlunit.version>2.6.2</xmlunit.version>
+        
+        
+    </properties>
+    
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.apache.servicemix.parent</groupId>
+                <artifactId>assemblies-parent</artifactId>
+                <version>${servicemix.parent.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>org.apache.felix.fileinstall</artifactId>
+                <!-- Needs to be overwritten because of https://issues.apache.org/jira/browse/CAMEL-7985?attachmentSortBy=fileName -->
+                <version>${felix.fileinstall.version}</version>
+            </dependency>
+            <dependency>
+                <artifactId>org.apache.aries.blueprint.core</artifactId>
+                <groupId>org.apache.aries.blueprint</groupId>
+                <!-- Version needs to be overwritten because of https://issues.apache.org/jira/browse/ARIES-1682 -->
+                <!--version>${aries.blueprint.version}</version -->
+            </dependency>
+            <dependency>
+                <groupId>org.ow2.asm</groupId>
+                <artifactId>asm-commons</artifactId>
+                <version>${asm.commons.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.osgi</groupId>
+                <artifactId>org.osgi.service.log</artifactId>
+                <version>${osgi.log.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.osgi</groupId>
+                <artifactId>org.osgi.service.http</artifactId>
+                <version>${osgi.http.version}</version>
+            </dependency>
+
+                                    
+        </dependencies>
+        
+    </dependencyManagement>
+  
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-core</artifactId>
+            <scope>provided</scope>
+        </dependency>                               
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-quartz2</artifactId>
+            <scope>test</scope>
+        </dependency>		
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-http4</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>		
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-stream</artifactId>
+            <scope>provided</scope>
+        </dependency>        
+                                
+                                                
+        <!--dependency>
+            <groupId>com.odoojava</groupId>
+            <artifactId>odoo-java-api</artifactId>
+            <version>${odoo-java-api.version}</version>
+        </dependency-->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${junit.jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <version>${junit.jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit.jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-runner</artifactId>
+            <version>${junit.platform.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-launcher</artifactId>
+            <version>${junit.platform.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-test-blueprint</artifactId>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.felix</groupId>
+                    <artifactId>org.apache.felix.fileinstall</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!--dependency>
+            <groupId>org.apache.felix</groupId>
+            <artifactId>org.apache.felix.utils</artifactId>
+            <scope>test</scope>
+        </dependency -->        
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>${mockito.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>		
+            <groupId>org.xmlunit</groupId>
+            <artifactId>xmlunit-core</artifactId>
+            <version>${xmlunit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <!--version>1.8.0-beta4</version-->
+            <scope>test</scope>
+        </dependency>        
+    </dependencies>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.6.1</version>
+                    <configuration>
+                        <compilerArgs>
+                            <arg>-Xlint:all</arg>
+                        </compilerArgs>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <!--plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-assembly-plugin</artifactId>
+              <version>3.0.0</version>
+              <executions>
+                <execution>
+                  <id>bin-assembly</id>
+                  <phase>package</phase>
+                  <goals>
+                    <goal>single</goal>
+                  </goals>
+                  <configuration>
+                    <appendAssemblyId>true</appendAssemblyId>
+                    <descriptors>
+                      <descriptor>src/main/assembly/assembly-bin.xml</descriptor>
+                    </descriptors>
+                  </configuration>
+                </execution>
+                <execution>
+                  <id>src-assembly</id>
+                  <phase>package</phase>
+                  <goals>
+                    <goal>single</goal>
+                  </goals>
+                  <configuration>
+                    <appendAssemblyId>true</appendAssemblyId>
+                    <descriptors>
+                      <descriptor>src/main/assembly/assembly-src.xml</descriptor>
+                    </descriptors>
+                  </configuration>
+                </execution>
+              </executions>
+            </plugin-->
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.22.1</version>
+                <configuration>
+                    <systemPropertyVariables>
+                         <javax.net.ssl.trustStore>c:/Users/FEHOSSFE/Java/cacerts/cacerts</javax.net.ssl.trustStore>
+                    </systemPropertyVariables>
+                </configuration>
+
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.7.1</version>
+            </plugin>      
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.5.3</version>
+            </plugin>
+        </plugins>
+    </build>
+  
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <stylesheetfile>${basedir}/src/main/javadoc/javadoc_stylesheet.css</stylesheetfile>
+                    <show>public</show>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>  
+</project>
