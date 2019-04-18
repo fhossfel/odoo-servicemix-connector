@@ -53,15 +53,8 @@ public class OdooObjectTest {
     
     
         
-    @Test
+    //@Test
     public void search_read() throws XmlRpcException {
-        
-        List test = asList(asList(asList("is_company", "=", true), asList("customer", "=", true)));
-        
-        Map test2 = new HashMap() {{
-                                                                                            put("fields", asList("name", "country_id", "comment"));
-                                                                                            put("limit", 5);
-                                                                                           }};
         
         Object result = client.execute("execute_kw", asList(db, uid, password,
                                                                              "res.partner",
@@ -74,21 +67,30 @@ public class OdooObjectTest {
                                                                                            }}
                                                        ));
         
+    }
+    
+    @Test
+    public void create() throws XmlRpcException {
         
-  /*      Object result = asList((Object[])client.execute("execute_kw", asList(db,
-                                                                             uid, 
-                                                                             password,
-                                                                             "res.partner",
-                                                                             "search_read",
-                                                                            asList(asList(asList("is_company", "=", true),
-                                                                                          asList("customer", "=", true))),
-                                                                            new HashMap() {{
-                                                                                            put("fields", asList("name", "country_id", "comment"));
-                                                                                            put("limit", 5);
-                                                                                           }}
-                                                       ))); */
-        
-        System.out.println(result);
+        Object result = client.execute("execute_kw", asList(db, uid, password,
+                                                                             "stock.picking",
+                                                                             "create",
+                                                                            asList(new HashMap() {{ put("picking_type_id", 1);
+                                                                                                  //  put("name", "[14529048] Waschtisch - WE1 vom 18.0.4.2019/2");
+                                                                                                    put("partner_id", 535);
+                                                                                                    put("location_id", 8);
+                                                                                                    put("location_dest_id", 18);
+                                                                                                    put("state", "done");
+                                                                                                    put("move_lines", 
+                                                                                                            asList(asList(0,0, new HashMap() {{ put("product_id",2204);
+                                                                                                                                                put("name","[P01-14529048] Waschtisch - WE1 vom 18.0.4.2019");
+                                                                                                                                                put("product_uom", 1);
+                                                                                                                                                put("quantity_done", 65);
+                                                                                                                                                put("state", "done");
+                                                                                                                                      }})));
+                                                                            }})
+                                                       ));
         
     }
+
 }
