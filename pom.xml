@@ -99,8 +99,6 @@
                 <artifactId>org.osgi.service.http</artifactId>
                 <version>${osgi.http.version}</version>
             </dependency>
-
-                                    
         </dependencies>
         
     </dependencyManagement>
@@ -110,7 +108,12 @@
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-core</artifactId>
             <scope>provided</scope>
-        </dependency>                               
+        </dependency>
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-saxon</artifactId>
+            <scope>provided</scope>
+        </dependency>		
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-quartz2</artifactId>
@@ -125,8 +128,7 @@
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-stream</artifactId>
             <scope>provided</scope>
-        </dependency>        
-
+        </dependency>
         <dependency>
             <groupId>com.odoojava</groupId>
             <artifactId>odoo-java-api</artifactId>

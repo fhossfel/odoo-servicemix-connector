@@ -92,5 +92,19 @@ public class OdooObjectTest {
                                                        ));
         
     }
+    
+    //@Test
+    public void findWarehouse() throws XmlRpcException {
+        
+         Object result = client.execute("execute_kw", asList(db, uid, password,
+                                                                             "stock.location",
+                                                                             "search",
+                                                                            asList(asList(asList("name", "=ilike", "440%"))) /*,
+                                                                            new HashMap() {{
+                                                                                            put("fields", asList("name", "complete_name","display_name", "usage", "comment"));
+//                                                                                            put("limit", 5);
+                                                                                           }} */));
+        
+    }
 
 }

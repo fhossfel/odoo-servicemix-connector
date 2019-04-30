@@ -16,9 +16,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class OdooCamelRouteTest extends CamelBlueprintTestSupport {
+public class OdooCamelStockLocationTest extends CamelBlueprintTestSupport {
 
-    @Produce(uri="direct:start")
+    @Produce(uri="direct:lookup.stock.location")
     protected ProducerTemplate inputEndpoint;
 
     @BeforeEach
@@ -45,7 +45,7 @@ public class OdooCamelRouteTest extends CamelBlueprintTestSupport {
     @Override
     protected String getBlueprintDescriptor() {
 
-        return "/OSGI-INF/blueprint/test.xml";
+        return "/OSGI-INF/blueprint/receiving_goods.xml";
 
     }
     
@@ -77,13 +77,9 @@ public class OdooCamelRouteTest extends CamelBlueprintTestSupport {
             }
 
         });
-        
 
         Exchange senderExchange = new DefaultExchange(context, ExchangePattern.InOut);
-        senderExchange.getIn().setBody("<methodCall xmlns:ex=\"http://ws.apache.org/xmlrpc/namespaces/extensions\">\n" +
-                                       "   <methodName>list</methodName>\n" +
-                                       "   <params/>\n" +
-                                       "</methodCall>");
+        senderExchange.getIn().setBody("<ampty />");
         inputEndpoint.send(senderExchange);
 
         resultEndpoint.expectedMessageCount(1);
