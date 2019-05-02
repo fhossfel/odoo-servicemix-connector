@@ -1,37 +1,76 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+           xmlns:cee="com.cisag.app.purchasing.obj.ReceiptOfGoods"
+           xmlns:fn="http://www.w3.org/2005/xpath-functions"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0 https://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd">
     
-    <bean  id="setHeader_" class="de.baumarktdirekt.servicemix.aggregate.SetHeaderAggregationStrategy">
+    <bean  id="setHeader_location_dest_id" class="de.baumarktdirekt.servicemix.aggregate.SetHeaderAggregationStrategy">
         <argument value="location_dest_id"/>
+    </bean>
+
+    <bean  id="setHeader_partner_id" class="de.baumarktdirekt.servicemix.aggregate.SetHeaderAggregationStrategy">
+        <argument value="partner_id" />
     </bean>
 
     <camelContext xmlns="http://camel.apache.org/schema/blueprint">
         
-        <route id="direct:create.stock.picking-start">
+        <route id="create.stock.picking">
             <from id="start" uri="direct:start" />
-            <log id="_log3" message="- Sent -"/>
-            <setHeader headerName="Content-Typ">
-                <constant>text/xml; charset=utf-8</constant>        
+
+                         <!-- Lookup of partner_id -->
+            <setHeader headerName="res.partner.ref">
+                <xpath logNamespaces="true" resultType="java.lang.String">/cee:semiramis/cee:ReceiptOfGoods/cee:SupplierPartner/cee:number/text()</xpath>
             </setHeader>
+            <enrich strategyRef="setHeader_partner_id">
+                <simple>direct:lookup.res.partner</simple>
+            </enrich>
+
+            
+            
+            <!-- location_id is always since it is coming from the supplier -->
+            <setHeader headerName="location_id">
+                <simple>8</simple>
+            </setHeader>
+
+            <!-- Lookup of location_dest_id -->
+            <setHeader headerName="stock.location.name">
+                <xpath resultType="java.lang.String">fn:concat(fn:replace(/cee:semiramis/cee:ReceiptOfGoods/cee:Details/cee:storageArea/cee:warehouse, '^0', ''),'%')</xpath>
+            </setHeader>
+            <enrich strategyRef="setHeader_location_dest_id">
+                <simple>direct:lookup.stock.location</simple>
+            </enrich>
+
+            <to uri="xslt:xslt/odoo-create-stock.picking.xslt?saxon=true"/>           
+
             <to uri="stream:out" />
         </route>
-        
+       
         <route id="lookup.stock.location">
             <from uri="direct:lookup.stock.location" />
             <setHeader headerName="odoo-model">
                 <constant>stock.location</constant>        
             </setHeader>
             <setHeader headerName="odoo-filter">
-                <constant>name ilike 490%</constant>        
-            </setHeader>            
+                <simple>name ilike ${headers[stock.location.name]}</simple>
+            </setHeader>
+            <to uri="direct:lookup" /> 
+        </route>
+        
+        <route id="lookup.partner">
+            <from uri="direct:lookup.res.partner" />
+            <setHeader headerName="odoo-model">
+                <constant>res.partner</constant>        
+            </setHeader>
+            <setHeader headerName="odoo-filter">
+                <simple>ref = ${headers[res.partner.ref]}</simple>
+            </setHeader>
             <to uri="direct:lookup" /> 
         </route>
         
         <route id="lookup">
             <from uri="direct:lookup" />
-            <setHeader headerName="Content-Typ">
+            <setHeader headerName="Content-Type">
                 <constant>text/xml; charset=utf-8</constant>        
             </setHeader>
             <setHeader headerName="odoo-database">
@@ -43,12 +82,10 @@
             <setHeader headerName="odoo-password">
                 <constant>Odoo</constant>        
             </setHeader>
-            <to id="_to1" uri="xslt:xslt/odoo-lookup.xslt?saxon=true"/>
-            <to uri="stream:out" />
+            <to id="_to1" uri="xslt:xslt/odoo-lookup.xslt?saxon=true"/>           
             <to uri="https4://ntw-node-test01.bmd.local/xmlrpc/2/object" />
-            <to uri="stream:out" />
             <setBody> 
-                <xpath>/methodResponse/params/param/array/data/value/int</xpath>
+                <xpath resultType="java.lang.String">/methodResponse/params/param/value/array/data/value[1]/int/text()</xpath>
             </setBody>
         </route>
         

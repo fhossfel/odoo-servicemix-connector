@@ -19,7 +19,7 @@ import org.junit.jupiter.api.Test;
 
 public class CreateStockPickingTest extends CamelBlueprintTestSupport {
 
-    @Produce(uri="direct:create.stock.picking")
+    @Produce(uri="direct:start")
     protected ProducerTemplate inputEndpoint;
 
     @BeforeEach
@@ -68,7 +68,7 @@ public class CreateStockPickingTest extends CamelBlueprintTestSupport {
         MockEndpoint resultEndpoint = context.getEndpoint("mock:result", MockEndpoint.class);
 
         // Define mock
-   /*     context.getRouteDefinition("create.stock.picking").adviceWith(context, new AdviceWithRouteBuilder() {
+        context.getRouteDefinition("create.stock.picking").adviceWith(context, new AdviceWithRouteBuilder() {
 
             @Override
             public void configure() throws Exception {
@@ -76,9 +76,8 @@ public class CreateStockPickingTest extends CamelBlueprintTestSupport {
               interceptSendToEndpoint("stream:out").skipSendToOriginalEndpoint().to("mock:result"); //
 
             }
+        });
 
-         */
-        
         String payload = Util.readRessource("test-data/we_00268350.xml");
 
         Exchange senderExchange = new DefaultExchange(context, ExchangePattern.InOut);
@@ -86,27 +85,13 @@ public class CreateStockPickingTest extends CamelBlueprintTestSupport {
         inputEndpoint.send(senderExchange);
 
         resultEndpoint.expectedMessageCount(1);
-       // resultEndpoint.assertIsSatisfied();
+        resultEndpoint.assertIsSatisfied();
         
         for (Exchange exchange : resultEndpoint.getExchanges()) {
             
             System.out.println("------------> " + exchange.getIn().getBody(String.class));
+            exchange.getIn().getHeaders().forEach((k,v) -> { System.err.println("------------> Header \"" + k + "\": \"" + v + "\""); });
         }
-        /*for (Exchange exchange : resultEndpoint.getExchanges()) {
-
-            String actual = exchange.getIn().getBody(String.class);
-            String lagerort = exchange.getIn().getHeader("LAGERORT", String.class);
-            String expectedFilename = "120".equals(lagerort) ? "kss/P_KSS_BESTAENDE_HWL.xml" : "kss/P_KSS_BESTAENDE_NoLo.xml";
-
-            String expected = Util.readRessource(expectedFilename);
-
-            Util.assertXmlEqual(expected, actual, n -> !"CREDATE".equals(n.getNodeName())
-                    && !"CRETIME".equals(n.getNodeName())
-                    && !"BELEGNUMMER".equals(n.getNodeName())
-                    && !"BELEGDATUM".equals(n.getNodeName())
-                    && !"SERIAL".equals(n.getNodeName()));
-
-        } */
 
     }
 

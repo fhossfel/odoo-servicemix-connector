@@ -4,7 +4,7 @@
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xmlns:fn="http://www.w3.org/2005/xpath-functions"
-                 xsi:schemaLocation="http://www.w3.org/1999/XSL/Transform https://www.w3.org/2007/schema-for-xslt20.xsd"
+                xsi:schemaLocation="http://www.w3.org/1999/XSL/Transform https://www.w3.org/2007/schema-for-xslt20.xsd"
                 exclude-result-prefixes="xs fn">
 	
     <xsl:output method="xml" encoding="UTF-8" byte-order-mark="no" omit-xml-declaration="yes" indent="yes"  />
